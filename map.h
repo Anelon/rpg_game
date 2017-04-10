@@ -68,3 +68,7 @@ void map::render_map() {
 void map::generate_map() {
 	random_shuffle(game_map.begin(), game_map.end());
 }
+
+void map::addto_map(room add) {
+	game_map.push_back(add);
+}
