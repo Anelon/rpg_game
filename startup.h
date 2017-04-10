@@ -2,6 +2,7 @@
 #include "mobAI.h"
 
 void make_rooms() {
+	//setup rooms and add them to room class
 	room room1;
 	string row1  = "#######==#######";
 	string row2  = "#..............#";
@@ -477,6 +478,7 @@ void make_rooms() {
 	row16 = "################";
 	roomtile = row1 + row2 + row3 + row4 + row5 + row6 + row7 + row8 + row9 + row10 + row11 + row12 + row13 + row14 + row15 + row16;
 	room25.set_room(roomtile);
+	//add all of the rooms to the map
 	map game_map;
 	game_map.addto_map(room1);
 	game_map.addto_map(room2);
@@ -503,4 +505,6 @@ void make_rooms() {
 	game_map.addto_map(room23);
 	game_map.addto_map(room24);
 	game_map.addto_map(room25);
+	//test show map
+	game_map.render_map();
 }

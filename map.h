@@ -9,11 +9,14 @@ class room {
 		vector<char> render_room_map();
 		void render_room();
 		void print_render_room_map();
+		void see_room();
+		bool is_seen();
 };
 
 class map {
 	private:
 		vector<room> game_map;
+		vector<char> mini_map;
 	public:
 		void render_map();
 		void generate_map();
@@ -56,14 +59,62 @@ void room::print_render_room_map() {
 	}
 	cout << endl;
 }
+//will update the mini map to show the room entered
+void room::see_room() {
+	seen = true;
+}
+bool room::is_seen() {
+	return seen;
+}
 
 void map::render_map() {
-	for(int i = 0; i < MAP_SIZE_X; i++) {
-		for(int j = 0; j < MAP_SIZE_X; j++) { 
-			cout << "#" << endl;
-		}
-		cout << endl;
+	//shows mini map (move to side get working with curses)
+	vector<char> blank_room(9, ' ');
+	//takes the rending of the rooms vector and puts them in mini map vector if seen
+	for (unsigned int i = 0; i < game_map.size(); i++) {
+		vector<char>basic_room = game_map.at(i).render_room_map();
+		//if(game_map.at(i).is_seen())
+		mini_map.insert(mini_map.end(), basic_room.begin(), basic_room.end());
+		//else mimi_map.insert(mini_map.end(), blank_room.begin(), blank_room.end());
 	}
+	//formats and outputs the minimap
+	int column = 0;
+	int row = 0;
+	for (unsigned int i = 0; i < mini_map.size(); i++) {
+		if(i%9 == 0) {
+			cout << mini_map.at(i);
+			column++;
+		}
+		if(i%9 == 1) {
+			cout << mini_map.at(i);
+			column++;
+		}
+		if(i%9 == 2) {
+			cout << mini_map.at(i);
+			column++;
+			row++;
+		}
+		if(i%9 == 3) {
+			cout << mini_map.at(i);
+		}
+		if(i%9 == 4) {
+			cout << mini_map.at(i);
+		}
+		if(i%9 == 5) {
+			cout << mini_map.at(i);
+		}
+		if(i%9 == 6) {
+			cout << mini_map.at(i);
+		}
+		if(i%9 == 7) {
+			cout << mini_map.at(i);
+		}
+		if(i%9 == 8) {
+			cout << mini_map.at(i);
+			cout << endl;
+		}
+	}	
+	cout << endl;
 }
 void map::generate_map() {
 	random_shuffle(game_map.begin(), game_map.end());
