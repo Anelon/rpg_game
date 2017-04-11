@@ -506,5 +506,9 @@ void make_rooms() {
 	game_map.addto_map(room24);
 	game_map.addto_map(room25);
 	//test show map
+	clear();
 	game_map.render_map();
+	refresh();
+	wait_ticks(100000000);
+	endwin();
 }

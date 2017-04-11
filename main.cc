@@ -8,7 +8,7 @@ int main() {
 	//add desired colors when time comes
 	clear();
 	noecho();
-//	cdbreak(); not working for some reason (check includes)
+	//cdbreak();
 	timeout(TIMEOUT);
 
 	//spash screen
@@ -16,5 +16,7 @@ int main() {
 	timeout(TIMEOUT);
 	clear();
 
-	make_rooms(); //in startup.h
+	mvaddch(0,0,'i');
+	mvprintw(1,0,"test");
+	//make_rooms(); //in startup.h
 }

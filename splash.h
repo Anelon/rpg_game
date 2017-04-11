@@ -3,12 +3,6 @@
 #include <cmath>
 using namespace std;
 
-void wait_ticks(int ticks) {
-	clock_t start = clock();
-	while ((clock() - start) < ticks)
-		; //Do nothing
-}
-
 void animate_flag(int x, int y, int frame) {
 	if (frame % 6 == 0 || frame < 15) {
 		mvprintw(0+y,x,"                      T)))                       __,___,_                    T)))");
@@ -48,26 +42,6 @@ void animate_flag(int x, int y, int frame) {
 	}
 }
 
-void words(int frame) {
-	int x = 120-frame, y = 0;
-			mvprintw(0+y,x,"__  ___  _______ .______      .__   __.  ___________    ____    ");
-			mvprintw(1+y,x,"|  |/  / |   ____||   _  \\     |  \\ |  | |   ____\\   \\  /   /    ");
-			mvprintw(2+y,x,"|  '  /  |  |__   |  |_)  |    |   \\|  | |  |__   \\   \\/   /     ");
-			mvprintw(3+y,x,"|    <   |   __|  |      /     |  . `  | |   __|   \\_    _/      ");
-			mvprintw(4+y,x,"|  .  \\  |  |____ |  |\\  \\----.|  |\\   | |  |____    |  |        ");
-			mvprintw(5+y,x,"|__|\\__\\ |_______|| _| `._____||__| \\__| |_______|   |__|        ");
-			mvprintw(6+y,x,"");
-			mvprintw(7+y,x,"  ______     ___           _______.___________. __       _______ ");
-			mvprintw(8+y,x," /      |   /   \\         /       |           ||  |     |   ____|");
-			mvprintw(9+y,x,"|  ,----'  /  ^  \\       |   (----`---|  |----`|  |     |  |__   ");
-			mvprintw(10+y,x,"|  |      /  /_\\  \\       \\   \\       |  |     |  |     |   __|  ");
-			mvprintw(11+y,x,"|  `----./  _____  \\  .----)   |      |  |     |  `----.|  |____ ");
-			mvprintw(12+y,x," \\______/__/     \\__\\ |_______/       |__|     |_______||_______|");
-			mvprintw(13+y,x,"");
-			mvprintw(14+y,x,"");
-			mvprintw(15+y,x,"(c) 2015 William Kerney");
-}
-
 void splash() {
 	int x = 0, y = 0; //Holds offsets to draw the ASCII art
 	for (int i = 0; i < 120; i++) {
@@ -76,10 +50,7 @@ void splash() {
 		if (ch != ERR) break;
 
 		clear();
-		if (i > 60) {
-			words(i);
-		}
-		else {
+		if (i < 60) {
 			//x = 80 / (1+i);
 			//x = fabs(80 * sin(i/12.56));
 			y = 30 - i;

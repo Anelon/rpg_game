@@ -19,6 +19,7 @@ class map {
 		vector<char> mini_map;
 	public:
 		void render_map();
+		void print_map();
 		void generate_map();
 		void addto_map(room add);
 };
@@ -77,44 +78,26 @@ void map::render_map() {
 		mini_map.insert(mini_map.end(), basic_room.begin(), basic_room.end());
 		//else mimi_map.insert(mini_map.end(), blank_room.begin(), blank_room.end());
 	}
-	//formats and outputs the minimap
-	int column = 0;
+}
+void map::print_map() {
+	int column = 17;
 	int row = 0;
 	for (unsigned int i = 0; i < mini_map.size(); i++) {
-		if(i%9 == 0) {
-			cout << mini_map.at(i);
-			column++;
-		}
-		if(i%9 == 1) {
-			cout << mini_map.at(i);
-			column++;
-		}
+		mvprintw(1,1,"test");
+		mvaddch(column+i,row,mini_map.at(i));
 		if(i%9 == 2) {
-			cout << mini_map.at(i);
-			column++;
 			row++;
+			column -=3;
+		}else if(i%9 == 5) {
+			row++;
+			column -=3;
+		} else if(i%9 == 8) {
+			row-=2;
+			column = 17;
 		}
-		if(i%9 == 3) {
-			cout << mini_map.at(i);
-		}
-		if(i%9 == 4) {
-			cout << mini_map.at(i);
-		}
-		if(i%9 == 5) {
-			cout << mini_map.at(i);
-		}
-		if(i%9 == 6) {
-			cout << mini_map.at(i);
-		}
-		if(i%9 == 7) {
-			cout << mini_map.at(i);
-		}
-		if(i%9 == 8) {
-			cout << mini_map.at(i);
-			cout << endl;
-		}
+		if(i%45 == 0) row = 5;
 	}	
-	cout << endl;
+	//cout << endl;
 }
 void map::generate_map() {
 	random_shuffle(game_map.begin(), game_map.end());
