@@ -1,7 +1,7 @@
 #include "map.h"
 #include "mobAI.h"
 
-void make_rooms() {
+map make_rooms() {
 	//setup rooms and add them to room class
 	room room1;
 	string row1  = "#######==#######";
@@ -506,9 +506,5 @@ void make_rooms() {
 	game_map.addto_map(room24);
 	game_map.addto_map(room25);
 	//test show map
-	clear();
-	game_map.render_map();
-	refresh();
-	wait_ticks(100000000);
-	endwin();
+	return game_map;
 }

@@ -8,6 +8,7 @@ class room {
 		void set_room(string room);
 		vector<char> render_room_map();
 		void render_room();
+		void print_room();
 		void print_render_room_map();
 		void see_room();
 		bool is_seen();
@@ -22,6 +23,7 @@ class map {
 		void print_map();
 		void generate_map();
 		void addto_map(room add);
+		room get_room(int room_number);
 };
 
 
@@ -35,18 +37,30 @@ void room::render_room() {
 	}
 	cout << endl;
 }
+void room::print_room() {
+	int row = 0;
+	//move 2 columns for every one out (to look nicer)
+	for(unsigned int i = 0; i < tile.size(); i++) {
+		if(i%16 == 0 && i >=1) row++;
+		mvaddch(row,i%16,tile.at(i));
+	}
+}
 vector<char> room::render_room_map() {
 	vector<char> map_tile;
 	map_tile.push_back('#');
+	//check top room for door
 	if(tile.at(8) == '=') map_tile.push_back('=');
 	else map_tile.push_back('#');
 	map_tile.push_back('#');
+	//check left side for door
 	if(tile.at(128) == '=') map_tile.push_back('=');
 	else map_tile.push_back('#');
 	map_tile.push_back('.');
+	//check right side for door
 	if(tile.at(127) == '=') map_tile.push_back('=');
 	else map_tile.push_back('#');
 	map_tile.push_back('#');
+	//check bottom for door
 	if(tile.at(248) == '=') map_tile.push_back('=');
 	else map_tile.push_back('#');
 	map_tile.push_back('#');
@@ -69,7 +83,7 @@ bool room::is_seen() {
 }
 
 void map::render_map() {
-	//shows mini map (move to side get working with curses)
+	//shows mini map
 	vector<char> blank_room(9, ' ');
 	//takes the rending of the rooms vector and puts them in mini map vector if seen
 	for (unsigned int i = 0; i < game_map.size(); i++) {
@@ -80,11 +94,19 @@ void map::render_map() {
 	}
 }
 void map::print_map() {
-	int column = 17;
+	render_map();
+	int column = 35;
 	int row = 0;
 	for (unsigned int i = 0; i < mini_map.size(); i++) {
-		mvprintw(1,1,"test");
-		mvaddch(column+i,row,mini_map.at(i));
+		//place character on map then incriment column
+		mvaddch(row,column,mini_map.at(i));
+		column++;
+		//moves the map row down 1 and puts the columns back to the start
+		if(i%45 == 44) {
+			row += 4;
+			column -=20;
+		}
+		//handles each room's map positioning
 		if(i%9 == 2) {
 			row++;
 			column -=3;
@@ -93,11 +115,9 @@ void map::print_map() {
 			column -=3;
 		} else if(i%9 == 8) {
 			row-=2;
-			column = 17;
+			column++;
 		}
-		if(i%45 == 0) row = 5;
 	}	
-	//cout << endl;
 }
 void map::generate_map() {
 	random_shuffle(game_map.begin(), game_map.end());
@@ -105,4 +125,7 @@ void map::generate_map() {
 
 void map::addto_map(room add) {
 	game_map.push_back(add);
+}
+room map::get_room(int room_number) {
+	return game_map.at(room_number);
 }

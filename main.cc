@@ -1,5 +1,5 @@
 #include "startup.h"
-#include "splash.h"
+//#include "splash.h"
 
 int main() {
 	//setup ncurses
@@ -12,11 +12,14 @@ int main() {
 	timeout(TIMEOUT);
 
 	//spash screen
-	splash();
+	//splash();
 	timeout(TIMEOUT);
-	clear();
 
-	mvaddch(0,0,'i');
-	mvprintw(1,0,"test");
-	//make_rooms(); //in startup.h
+	clear();
+	map game_map = make_rooms(); //in startup.h
+	game_map.get_room(1).print_room();
+	game_map.print_map();
+	refresh();
+	wait_ticks(10000);
+
 }
