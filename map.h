@@ -4,6 +4,7 @@ class room {
 	private:
 		vector<char> tile;
 		bool seen = false;
+		bool in_room = false;
 	public:
 		void set_room(string room);
 		vector<char> render_room_map();
@@ -12,6 +13,10 @@ class room {
 		void print_render_room_map();
 		void see_room();
 		bool is_seen();
+		void leave_room();
+		void enter_room();
+		bool is_in_room();
+		char get_tile(int space);
 };
 
 class map {
@@ -23,6 +28,7 @@ class map {
 		void print_map();
 		void generate_map();
 		void addto_map(room add);
+		void shuffle_map();
 		room get_room(int room_number);
 };
 
@@ -39,10 +45,15 @@ void room::render_room() {
 }
 void room::print_room() {
 	int row = 0;
+	int column = 0;
 	//move 2 columns for every one out (to look nicer)
 	for(unsigned int i = 0; i < tile.size(); i++) {
-		if(i%16 == 0 && i >=1) row++;
-		mvaddch(row,i%16,tile.at(i));
+		if(i%16 == 0 && i >=1) {
+			row++;
+			column -=16;
+		}
+		mvaddch(row,(i%16)+column,tile.at(i));
+		column++;
 	}
 }
 vector<char> room::render_room_map() {
@@ -74,12 +85,24 @@ void room::print_render_room_map() {
 	}
 	cout << endl;
 }
-//will update the mini map to show the room entered
+//will update the mini map to show the rooms entered
 void room::see_room() {
 	seen = true;
 }
 bool room::is_seen() {
 	return seen;
+}
+void room::leave_room() {
+	in_room = false;
+}
+void room::enter_room() {
+	in_room = true;
+}
+bool room::is_in_room() {
+	return in_room;
+}
+char room::get_tile(int space) {
+	return tile.at(space);
 }
 
 void map::render_map() {
@@ -120,7 +143,7 @@ void map::print_map() {
 	}	
 }
 void map::generate_map() {
-	random_shuffle(game_map.begin(), game_map.end());
+	random_shuffle(game_map.begin()+1, game_map.end()-1);
 }
 
 void map::addto_map(room add) {

@@ -17,9 +17,85 @@ int main() {
 
 	clear();
 	map game_map = make_rooms(); //in startup.h
-	game_map.get_room(1).print_room();
 	game_map.print_map();
-	refresh();
-	wait_ticks(10000);
+		
+	int frame = 0;
+	int player_x, player_y;
+	player_x = 16, player_y = 8;
+	int current_room = 2;
+	bool can_move = true;
+	game_on = true;
+	while (true) {
+		if(!game_on) mvprintw(ROOM_SIZE_X+2,0,"Game Paused");
+		else mvprintw(ROOM_SIZE_X+2,0,"Game running. Frame: %i Room: %i", frame++, current_room+1);
+		mvprintw(ROOM_SIZE_X+3,0, "WASD keys to move around");
+		mvprintw(ROOM_SIZE_X+4,0, "Space to attack");
+		mvprintw(ROOM_SIZE_X+5,0, "Enter to pause game");
+		mvprintw(ROOM_SIZE_X+6,0, "Q to quit");
+		mvaddch(player_y,player_x, PLAYER);
+		int ch = getch();//wait for user input, with timeout delay
+		if (ch == 'q' || ch == 'Q') break;
+		else if (ch == ' ' && game_on) ;//add attack
+		else if (ch == '\n') game_on = !game_on ;//pause or unpause game
+		else if (ch == ERR) ;//do nothing
+		//add check for walls, obsticals, monsters
+		else if (ch == 'w' && game_on) {
+			//check for door
+			if(game_map.get_room(current_room).get_tile(index(player_x,player_y-1)) == DOOR){
+				//leave room change room enter room
+				game_map.get_room(current_room).leave_room();
+				current_room+=5;
+				game_map.get_room(current_room).enter_room();	
+				player_x = 16, player_y = 15;
+				game_map.print_map();
+			}
+			//check if tile moving to is open
+			if(game_map.get_room(current_room).get_tile(index(player_x,player_y-1)) != OPEN) can_move = false;
+			if(!(player_y < 2) && can_move) player_y--;
+		} else if (ch == 's' && game_on) {
+			if(game_map.get_room(current_room).get_tile(index(player_x,player_y+1)) == DOOR) {
+				//leave room change room enter room
+				game_map.get_room(current_room).leave_room();
+				current_room-=5;
+				game_map.get_room(current_room).enter_room();	
+				player_x = 16, player_y = 2;
+				game_map.print_map();
+			}
+			if(game_map.get_room(current_room).get_tile(index(player_x,player_y+1)) != OPEN) can_move = false;
+			if(!(player_y > ROOM_SIZE_X-3) && can_move) player_y++;
+		} else if (ch == 'a' && game_on) {
+			if(game_map.get_room(current_room).get_tile(index(player_x-2,player_y)) == DOOR) {
+				//leave room change room enter room
+				game_map.get_room(current_room).leave_room();
+				current_room--;
+				game_map.get_room(current_room).enter_room();	
+				player_x = 30, player_y = 8;
+				game_map.print_map();
+			}
+			if(game_map.get_room(current_room).get_tile(index(player_x-2,player_y)) != OPEN) can_move = false;
+			if(!(player_x < 4) && can_move) player_x-=2;
+		} else if (ch == 'd' && game_on) {
+			//not finding door to the right
+			if(game_map.get_room(current_room).get_tile(index(player_x+2,player_y)) == DOOR) {
+				//leave room change room enter room
+				game_map.get_room(current_room).leave_room();
+				current_room++;
+				game_map.get_room(current_room).enter_room();	
+				player_x = 4, player_y = 8;
+				game_map.print_map();
+			}
+			if(game_map.get_room(current_room).get_tile(index(player_x+2,player_y)) != OPEN) can_move = false;
+			if(!(player_x > (ROOM_SIZE_X*2)-6) && can_move) player_x+=2;
+		}
+		can_move = true;
 
+
+		game_map.get_room(current_room).print_room();
+		//printing more than one map downward
+		//game_map.print_map();
+		refresh();
+		wait_ticks(1000);
+	}
+	endwin();//end curses
+	system("clear");
 }
