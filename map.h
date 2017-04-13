@@ -107,6 +107,7 @@ char room::get_tile(int space) {
 
 void map::render_map() {
 	//shows mini map
+	mini_map.clear();
 	vector<char> blank_room(9, ' ');
 	//takes the rending of the rooms vector and puts them in mini map vector if seen
 	for (unsigned int i = 0; i < game_map.size(); i++) {
@@ -144,6 +145,8 @@ void map::print_map() {
 }
 void map::generate_map() {
 	random_shuffle(game_map.begin()+1, game_map.end()-1);
+	swap(game_map.at(0),game_map.at(2));
+	swap(game_map.at(24),game_map.at(21));
 }
 
 void map::addto_map(room add) {

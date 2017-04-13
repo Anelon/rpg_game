@@ -36,7 +36,7 @@ int index(int x, int y) {
 	while (y < 0) y+=ROOM_SIZE_X;
 	if (x >= ROOM_SIZE_X) x %= ROOM_SIZE_X;
 	if (y >= ROOM_SIZE_X) y %= ROOM_SIZE_X;
-	return (x*ROOM_SIZE_X+y);
+	return (y*ROOM_SIZE_X+x);
 }
 void wait_ticks(int ticks) {
 	clock_t start = clock();
