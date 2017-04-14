@@ -9,7 +9,7 @@
 #include <limits>
 #include <algorithm>
 using namespace std;
-
+//map tiles
 const unsigned char OPEN = '.';
 const unsigned char WALL = '#';
 const unsigned char MOB = 'M';
@@ -18,18 +18,24 @@ const unsigned char PLAYER = 'P';
 const unsigned char	CHEST = '$';
 const unsigned char DOOR = '=';
 const unsigned char KEY = 'K';
-
+const int DOOR_CHANCE = 6;
+//cursor movemnt
 const int UP = 65;
 const int DOWN = 66;
 const int LEFT = 68;
 const int RIGHT = 67;
 int cursor_x, cursor_y;
 
+const int MAP_TOP = 8;
+const int MAP_BOTTOM = 248;
+const int MAP_LEFT = 128;
+const int MAP_RIGHT = 127;
+
 int MAP_SIZE_X = 5;
 int ROOM_SIZE_X = 16;
 bool game_on;
 const unsigned int TIMEOUT = 300;
-
+//conver x and y to a vector index
 int index(int x, int y) {
 	x = x/2;
 	while (x < 0) x+=ROOM_SIZE_X;

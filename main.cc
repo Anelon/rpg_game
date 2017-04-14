@@ -2,6 +2,7 @@
 //#include "splash.h"
 
 int main() {
+	srand(time(NULL));
 	//setup ncurses
 	initscr();//start curses mode
 	start_color(); // enable colors if possible

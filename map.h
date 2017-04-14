@@ -5,7 +5,12 @@ class room {
 		vector<char> tile;
 		bool seen = false;
 		bool in_room = false;
+		bool reachable = false;
 	public:
+		bool door_top = false;
+		bool door_bottom = false;
+		bool door_left = false;
+		bool door_right = false;
 		void set_room(string room);
 		vector<char> render_room_map();
 		void render_room();
@@ -17,6 +22,10 @@ class room {
 		void enter_room();
 		bool is_in_room();
 		char get_tile(int space);
+		void add_door(int place);
+		bool is_reachable();
+		void is_reached();
+		void not_reachable();
 };
 
 class map {
@@ -30,6 +39,9 @@ class map {
 		void addto_map(room add);
 		void shuffle_map();
 		room get_room(int room_number);
+		void open_doors();
+		bool solvable(int room);
+		void reset();
 };
 
 
@@ -104,7 +116,41 @@ bool room::is_in_room() {
 char room::get_tile(int space) {
 	return tile.at(space);
 }
-
+void room::add_door(int place) {
+	//TOP
+	if (place == MAP_TOP) {
+		tile.at(place) = '=';
+		tile.at(place-1) = '=';
+		door_top = true;
+	}
+	//BOTTOM
+	else if (place == MAP_BOTTOM) {
+		tile.at(place) = '=';
+		tile.at(place-1) = '=';
+		door_bottom = true;
+	}
+	//LEFT
+	else if (place == MAP_LEFT) {
+		tile.at(place) = '=';
+		tile.at(place-16) = '=';
+		door_left = true;
+	}
+	//RIGHT
+	else if (place == MAP_RIGHT) {
+		tile.at(place) = '=';
+		tile.at(place+16) = '=';
+		door_right = true;
+	}
+}
+bool room::is_reachable() {
+	return reachable;
+}
+void room::is_reached() {
+	reachable = true;
+}
+void room::not_reachable() {
+	reachable = false;
+}
 void map::render_map() {
 	//shows mini map
 	mini_map.clear();
@@ -120,14 +166,14 @@ void map::render_map() {
 void map::print_map() {
 	render_map();
 	int column = 35;
-	int row = 0;
+	int row = 16;
 	for (unsigned int i = 0; i < mini_map.size(); i++) {
 		//place character on map then incriment column
 		mvaddch(row,column,mini_map.at(i));
 		column++;
 		//moves the map row down 1 and puts the columns back to the start
 		if(i%45 == 44) {
-			row += 4;
+			row -= 4;
 			column -=20;
 		}
 		//handles each room's map positioning
@@ -154,4 +200,73 @@ void map::addto_map(room add) {
 }
 room map::get_room(int room_number) {
 	return game_map.at(room_number);
+}
+void map::open_doors() {
+	for(unsigned int i = 0; i < game_map.size(); i+=2) {
+		int roll = 0;
+		if (i !=2) {
+			//top
+			if (i <= 19) {
+				roll = (rand()%10);
+				if (roll < DOOR_CHANCE) {
+					game_map.at(i).add_door(MAP_TOP);
+					game_map.at(i+5).add_door(MAP_BOTTOM);
+					if (i == 22) continue; //only allow one door in boss room
+				}
+			}
+			//bottom
+			if(i >= 5) {
+				roll = (rand()%10);
+				if (roll < DOOR_CHANCE) {
+					game_map.at(i).add_door(MAP_BOTTOM);
+					game_map.at(i-5).add_door(MAP_TOP);
+					if (i == 22) continue; //only allow one door in boss room
+				}
+			}
+			//left
+			if(i%5 != 0) {
+				roll = (rand()%10);
+				if (roll < DOOR_CHANCE) {
+					game_map.at(i).add_door(MAP_LEFT);
+					game_map.at(i-1).add_door(MAP_RIGHT);
+					if (i == 22) continue; //only allow one door in boss room
+				}
+			}
+			//right
+			if (i%5 != 4) {
+				roll = (rand()%10);
+				if (i == 22) roll = 1; //force a door to be in boss room
+				if (roll < DOOR_CHANCE) {
+					game_map.at(i).add_door(MAP_RIGHT);
+					game_map.at(i+1).add_door(MAP_LEFT);
+				}
+			}
+		} else {//force doors around starting room
+			game_map.at(i-1).add_door(MAP_RIGHT);
+			game_map.at(i+1).add_door(MAP_LEFT);
+			game_map.at(i+5).add_door(MAP_BOTTOM);
+		}
+	}
+}
+bool map::solvable(int room) {
+	//return true;
+	cout << room << endl;
+	game_map.at(room).is_reached();
+	if (room == 22) return true;
+	if (game_map.at(room).door_top && !game_map.at(room+5).is_reachable()) {
+		solvable(room+5);
+	} 
+	if (game_map.at(room).door_bottom && !game_map.at(room-5).is_reachable()) {
+		solvable(room-5);
+	} 
+	if (game_map.at(room).door_left && !game_map.at(room-1).is_reachable()) {
+		solvable(room-1);
+	} 
+	if (game_map.at(room).door_right && !game_map.at(room+1).is_reachable()) {
+		solvable(room+1);
+	}
+	return false;
+}
+void map::reset() {
+	game_map.clear();
 }
