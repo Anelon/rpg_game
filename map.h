@@ -1,8 +1,10 @@
 #include "constants.h"
+#include "mobAI.h"
 
 class room {
 	private:
 		vector<char> tile;
+		vector<Mob> monsters;
 		bool seen = false;
 		bool in_room = false;
 		bool reachable = false;
@@ -23,9 +25,11 @@ class room {
 		bool is_in_room();
 		char get_tile(int space);
 		void add_door(int place);
+		void set_mob(int place);
 		bool is_reachable();
 		void is_reached();
 		void not_reachable();
+		int get_size();
 };
 
 class map {
@@ -41,6 +45,7 @@ class map {
 		room get_room(int room_number);
 		void open_doors();
 		void solvable(int room);
+		void add_mob();
 		void reset();
 };
 
@@ -142,6 +147,9 @@ void room::add_door(int place) {
 		door_right = true;
 	}
 }
+void room::set_mob(int place) {
+	tile.at(place) = 'm';
+}
 bool room::is_reachable() {
 	return reachable;
 }
@@ -150,6 +158,9 @@ void room::is_reached() {
 }
 void room::not_reachable() {
 	reachable = false;
+}
+int room::get_size() {
+	return tile.size();
 }
 void map::render_map() {
 	//shows mini map
@@ -249,7 +260,6 @@ void map::open_doors() {
 	}
 }
 void map::solvable(int room) {
-	cout << room << endl;
 	game_map.at(room).is_reached();
 	if (game_map.at(room).door_top && !game_map.at(room+5).is_reachable()) {
 		solvable(room+5);
@@ -263,7 +273,22 @@ void map::solvable(int room) {
 	if (game_map.at(room).door_right && !game_map.at(room+1).is_reachable()) {
 		solvable(room+1);
 	}
-	//if (room == 2) return false;
+}
+void map::add_mob() {
+	for(unsigned int i = 0; i < game_map.size(); i++) {
+		int roll = 0;
+		if (i !=2) {
+			for(int j = 0; j < game_map.at(i).get_size(); j++) {
+				if(game_map.at(i).get_tile(j) == '.') {
+					roll = (rand()%100);
+					if (roll < MOB_CHANCE) { //add monster to room
+						game_map.at(i).set_mob(j);
+						//construct new mob
+					}
+				}
+			}
+		}
+	}
 }
 void map::reset() {
 	game_map.clear();

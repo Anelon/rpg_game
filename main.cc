@@ -1,6 +1,5 @@
 #include "startup.h"
 //#include "splash.h"
-
 int main() {
 	srand(time(NULL));
 	//setup ncurses
@@ -17,15 +16,17 @@ int main() {
 	timeout(TIMEOUT);
 
 	clear();
+	//makes and prints out map with mini_map
 	map game_map = make_rooms(); //in startup.h
 	game_map.print_map();
-		
+	//initialize variables	
 	int frame = 0;
 	int player_x, player_y;
 	player_x = 16, player_y = 8;
 	int current_room = 2;
 	bool can_move = true;
 	game_on = true;
+	//main loop of doom
 	while (true) {
 		if(!game_on) mvprintw(ROOM_SIZE_X+2,0,"Game Paused");
 		else mvprintw(ROOM_SIZE_X+3,0,"Game running. Frame: %i Room: %i", frame++, current_room+1);
@@ -87,13 +88,19 @@ int main() {
 			if(game_map.get_room(current_room).get_tile(index(player_x,player_y)+1) != OPEN) can_move = false;
 			if(!(player_x > (ROOM_SIZE_X*2)-6) && can_move) player_x+=2;
 		}
+		//start AI monster moving
+		if(game_on) {
+		}
+
+
+
 		can_move = true;
-
-
 		game_map.get_room(current_room).print_room();
 		refresh();
 		wait_ticks(1000);
+		usleep(16667);
 	}
 	endwin();//end curses
 	system("clear");
 }
+
