@@ -40,7 +40,7 @@ class map {
 		void shuffle_map();
 		room get_room(int room_number);
 		void open_doors();
-		bool solvable(int room);
+		void solvable(int room);
 		void reset();
 };
 
@@ -248,11 +248,9 @@ void map::open_doors() {
 		}
 	}
 }
-bool map::solvable(int room) {
-	//return true;
+void map::solvable(int room) {
 	cout << room << endl;
 	game_map.at(room).is_reached();
-	if (room == 22) return true;
 	if (game_map.at(room).door_top && !game_map.at(room+5).is_reachable()) {
 		solvable(room+5);
 	} 
@@ -265,7 +263,7 @@ bool map::solvable(int room) {
 	if (game_map.at(room).door_right && !game_map.at(room+1).is_reachable()) {
 		solvable(room+1);
 	}
-	return false;
+	//if (room == 2) return false;
 }
 void map::reset() {
 	game_map.clear();

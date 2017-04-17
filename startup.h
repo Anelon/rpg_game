@@ -508,7 +508,9 @@ map make_rooms() {
 	cout << "Generating map\n";
 	game_map.generate_map();
 	game_map.open_doors();
-	if (!game_map.solvable(2)) {
+	game_map.solvable(22);
+	cout << game_map.get_room(22).is_reachable();
+	if (!game_map.get_room(22).is_reachable()) {
 		game_map.reset();
 		make_rooms();
 	}
