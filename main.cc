@@ -91,8 +91,12 @@ int main() {
 		//start AI monster moving
 		if(game_on) {
 		}
-
-
+		if (current_room == 22) {
+			endwin();
+			system("clear");
+			cout << "You Win!\n";
+			break;
+		}
 
 		can_move = true;
 		game_map.get_room(current_room).print_room();
@@ -101,6 +105,5 @@ int main() {
 		usleep(16667);
 	}
 	endwin();//end curses
-	system("clear");
 }
 

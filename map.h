@@ -30,6 +30,7 @@ class room {
 		void is_reached();
 		void not_reachable();
 		int get_size();
+		void move_monster();
 };
 
 class map {
@@ -149,6 +150,10 @@ void room::add_door(int place) {
 }
 void room::set_mob(int place) {
 	tile.at(place) = 'm';
+	Mob temp_mob;
+	temp_mob.setlife(100);
+	temp_mob.set_location(place);
+	monsters.push_back(temp_mob);
 }
 bool room::is_reachable() {
 	return reachable;
@@ -162,6 +167,17 @@ void room::not_reachable() {
 int room::get_size() {
 	return tile.size();
 }
+/*void room::move_monster() {
+	for (unsigned int i = 0; i < monsters.size(); i++) {
+		vector<int> coord = get_coordinate(monsters.at(i));
+		int new_x = coord[0] + rand()%3 -1;
+		int new_y = coord[1] + rand()%3 -1;
+		index(new_x, new_y);
+	}
+}*/
+
+
+
 void map::render_map() {
 	//shows mini map
 	mini_map.clear();
@@ -279,11 +295,13 @@ void map::add_mob() {
 		int roll = 0;
 		if (i !=2) {
 			for(int j = 0; j < game_map.at(i).get_size(); j++) {
+				//set monsters to not spawn on edges of maps
+				if(i > 32 || i < 224 || (i%16) == 1 || (i%16) == 15) continue;
+				//place monsters
 				if(game_map.at(i).get_tile(j) == '.') {
 					roll = (rand()%100);
 					if (roll < MOB_CHANCE) { //add monster to room
 						game_map.at(i).set_mob(j);
-						//construct new mob
 					}
 				}
 			}

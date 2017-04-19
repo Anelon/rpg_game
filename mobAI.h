@@ -13,6 +13,11 @@ class Mob {
 		void setlife(int newlife) {
 			life = newlife;
 		}
+//		void move() {
+//			vector<int> coord = get_coordinate(mob_location);
+//			int new_x = x + rand()%3 -1;
+//			int new_y = y + rand()%3 -1;
+//		}
 	private:
 		int mob_location = 0;
 		int life = 100;
