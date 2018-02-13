@@ -17,6 +17,7 @@ class room {
 		vector<char> render_room_map();
 		void render_room();
 		void print_room();
+		string string_room();
 		void print_render_room_map();
 		void see_room();
 		bool is_seen();
@@ -70,9 +71,17 @@ void room::print_room() {
 			row++;
 			column -=16;
 		}
-		mvaddch(row,(i%16)+column,tile.at(i));
+		//mvaddch(row,(i%16)+column,tile.at(i));
 		column++;
 	}
+}
+string room::string_room() {
+	string stringRoom = "";
+	for(unsigned int i = 0; i < tile.size(); i++) {
+		if (i%16 == 0) stringRoom.push_back(' ');
+		stringRoom.push_back(tile.at(i));
+	}
+	return stringRoom;
 }
 vector<char> room::render_room_map() {
 	vector<char> map_tile;
@@ -196,7 +205,7 @@ void map::print_map() {
 	int row = 16;
 	for (unsigned int i = 0; i < mini_map.size(); i++) {
 		//place character on map then incriment column
-		mvaddch(row,column,mini_map.at(i));
+		//mvaddch(row,column,mini_map.at(i));
 		column++;
 		//moves the map row down 1 and puts the columns back to the start
 		if(i%45 == 44) {

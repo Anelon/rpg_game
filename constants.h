@@ -4,11 +4,12 @@
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
-#include <ncurses.h>
+//#include <ncurses.h>
 #include <utility>
 #include <limits>
 #include <algorithm>
 #include <unistd.h>
+#include <emscripten/emscripten.h>
 using namespace std;
 //map tiles
 const unsigned char OPEN = '.';

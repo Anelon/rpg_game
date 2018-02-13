@@ -1,0 +1,12 @@
+.squareDiv {
+	height: 96vh;
+	width: 96vh;
+	background-color: black;
+	margin: auto;
+	color: white;
+}
+
+.tile {
+	height: 6vh;
+	width: 6vh;
+}
