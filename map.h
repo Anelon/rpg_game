@@ -83,6 +83,7 @@ string room::string_room() {
 	}
 	return stringRoom;
 }
+//gives a 3x3 map for the room
 vector<char> room::render_room_map() {
 	vector<char> map_tile;
 	map_tile.push_back('#');

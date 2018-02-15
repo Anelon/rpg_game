@@ -9,4 +9,14 @@
 .tile {
 	height: 6vh;
 	width: 6vh;
+	float: left;
+}
+.wall {
+	background-color: #4d2600;
+}
+.open {
+	background-color: gray;
+}
+.door {
+	background-color: black;
 }
