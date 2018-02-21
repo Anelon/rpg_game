@@ -26,6 +26,7 @@ const char* EMSCRIPTEN_KEEPALIVE gameLoop(int ch) {
 	else if (ch == ' ' && game_on) ;//add attack
 	else if (ch == '\n') game_on = !game_on ;//pause or unpause game
 
+///////////////////////////////////////////////////////////////////////////////////
 	else if (ch == 'w' && game_on) {	//UP
 		//check for door
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y-1)) == DOOR){
@@ -40,6 +41,7 @@ const char* EMSCRIPTEN_KEEPALIVE gameLoop(int ch) {
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y-1)) != OPEN) can_move = false;
 		if(!(player_y < 2) && can_move) player_y--;
 
+///////////////////////////////////////////////////////////////////////////////////
 	} else if (ch == 's' && game_on) {	//DOWN
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y+1)) == DOOR) {
 			//leave room change room enter room
@@ -52,6 +54,7 @@ const char* EMSCRIPTEN_KEEPALIVE gameLoop(int ch) {
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y+1)) != OPEN) can_move = false;
 		if(!(player_y > ROOM_SIZE_X-3) && can_move) player_y++;
 
+///////////////////////////////////////////////////////////////////////////////////
 	} else if (ch == 'a' && game_on) {	//LEFT
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y)-1) == DOOR) {
 			//leave room change room enter room
@@ -65,6 +68,7 @@ const char* EMSCRIPTEN_KEEPALIVE gameLoop(int ch) {
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y)-1) != OPEN) can_move = false;
 		if(!(player_x < 4) && can_move) player_x-=2;
 
+///////////////////////////////////////////////////////////////////////////////////
 	} else if (ch == 'd' && game_on) {	//RIGHT
 		if(game_map.get_room(current_room).get_tile(index(player_x,player_y)+1) == DOOR) {
 			//leave room change room enter room

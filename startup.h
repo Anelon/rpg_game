@@ -10,7 +10,7 @@ map make_rooms() {
 	string row5  = "#..............#";
 	string row6  = "#..............#";
 	string row7  = "#..............#";
-	string row8  = "=..............=";
+	string row8  = "=......P.......=";
 	string row9  = "=..............=";
 	string row10 = "#..............#";
 	string row11 = "#..............#";
