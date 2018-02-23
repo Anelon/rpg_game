@@ -24,5 +24,7 @@
 	background-color: blue;
 }
 .play {
-	background-color: red;
+	background-color: gray;
+	background-image: url("chibiSquid.png");
+	background-size: 6vh;
 }

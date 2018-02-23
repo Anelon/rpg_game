@@ -8,6 +8,8 @@ class room {
 		bool seen = false;
 		bool in_room = false;
 		bool reachable = false;
+		int player_x = 8;
+		int player_y = 8;
 	public:
 		bool door_top = false;
 		bool door_bottom = false;
@@ -32,6 +34,7 @@ class room {
 		void not_reachable();
 		int get_size();
 		void move_monster();
+		string move_player(int new_player_x,int new_player_y);
 };
 
 class map {
@@ -40,6 +43,7 @@ class map {
 		vector<char> mini_map;
 	public:
 		void render_map();
+		string string_map();
 		void print_map();
 		void generate_map();
 		void addto_map(room add);
@@ -58,7 +62,7 @@ void room::set_room(string room) {
 void room::render_room() {
 	for(unsigned int i = 0; i < tile.size(); i++) {
 		if(i%16 == 0 && i >=1) cout << endl;
-		cout << tile.at(i) << " ";
+		cout << tile.at(i);
 	}
 	cout << endl;
 }
@@ -78,7 +82,7 @@ void room::print_room() {
 string room::string_room() {
 	string stringRoom = "";
 	for(unsigned int i = 0; i < tile.size(); i++) {
-		if (i%16 == 0) stringRoom.push_back(' ');
+		if (i%16 == 0 && i != 0) stringRoom.push_back(' ');
 		stringRoom.push_back(tile.at(i));
 	}
 	return stringRoom;
@@ -108,7 +112,7 @@ vector<char> room::render_room_map() {
 void room::print_render_room_map() {
 	vector<char> room_vec = render_room_map();
 	for(unsigned int i = 0; i < room_vec.size(); i++) {
-		if(i%3 == 0 && i >= 1) cout << endl;
+		if(i%3 == 0 && i != 0) cout << endl;
 		cout << room_vec.at(i);
 	}
 	cout << endl;
@@ -185,6 +189,15 @@ int room::get_size() {
 		index(new_x, new_y);
 	}
 }*/
+string room::move_player(int new_player_x, int new_player_y) {
+	tile.at(index(player_x,player_y)) = OPEN;
+	tile.at(index(new_player_x,new_player_y)) = PLAYER;
+	player_x = new_player_x;
+	player_y = new_player_y;
+	//render_room();
+	string stringed = string_room();
+	return stringed;
+}
 
 
 
@@ -199,6 +212,15 @@ void map::render_map() {
 		mini_map.insert(mini_map.end(), basic_room.begin(), basic_room.end());
 		//else mimi_map.insert(mini_map.end(), blank_room.begin(), blank_room.end());
 	}
+}
+string map::string_map() {
+	render_map();
+	string stringMap = "";
+	for (size_t i = 0 ; i < mini_map.size(); i++) {
+		if (i % 9 == 0 && i != 0) stringMap.push_back(' ');
+		stringMap.push_back(mini_map.at(i));
+	}
+	return stringMap;
 }
 void map::print_map() {
 	render_map();

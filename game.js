@@ -21,16 +21,19 @@ start.addEventListener("click", function () {
 function runGameLoop(ch) {
 	var gameTiles = game.children;
 	//calls gameLoop and converts Cstring to a Javascrpt String
-	var test = UTF8ToString(__Z8gameLoopi(ch));
+	var getGame = UTF8ToString(__Z8gameLoopi(ch));
 	//Splits string baised on Spaces put in when rendering
-	var split = test.split(" ");
-	var size = split.length;
+	getGame = getGame.split("  ");
+	var tiles = getGame[0];
+	var map = getGame[1];
+	var split = tiles.split(" ");
+	var size = parseInt(split.length);
 	//for each in split paste string then <br>
 	for (var line in split) {
 		//game.innerHTML += split[line] + "<br>";
 		for (var row in split[line]) {
 			//setup parsing string to tiles	
-			var tileid = ((line-1)*16)+parseInt(row);
+			var tileid = ((line)*(size))+parseInt(row);
 
 			//parse to check what is in that tile
 			if (split[line].charAt(row) == ".") { //OPEN
@@ -47,4 +50,7 @@ function runGameLoop(ch) {
 
 		}
 	}
+	showMap();
+}
+function showMap() {
 }

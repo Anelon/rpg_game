@@ -28,6 +28,9 @@ const int DOWN = 66;
 const int LEFT = 68;
 const int RIGHT = 67;
 int cursor_x, cursor_y;
+int new_player_x = 8;
+int new_player_y = 8;
+int current_room = 2;
 //locations on room (middle of sides)
 const int MAP_TOP = 8;
 const int MAP_BOTTOM = 248;
@@ -37,11 +40,11 @@ const int MAP_RIGHT = 127;
 int MAP_SIZE_X = 5;
 int ROOM_SIZE_X = 16;
 
-bool game_on;
+bool game_on = true;
 const unsigned int TIMEOUT = 300;
 //conver x and y to a vector index
 int index(int x, int y) {
-	x = x/2;
+	//x = x/2;
 	while (x < 0) x+=ROOM_SIZE_X;
 	while (y < 0) y+=ROOM_SIZE_X;
 	if (x >= ROOM_SIZE_X) x %= ROOM_SIZE_X;
