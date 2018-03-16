@@ -1,14 +1,36 @@
+.left {
+	width: 49vw;
+	float: left;
+}
+.right {
+	width: 49vw;
+	float:right;
+}
 .squareDiv {
-	height: 96vh;
-	width: 96vh;
+	height: 48vw;
+	width: 48vw;
 	background-color: black;
 	margin: auto;
 	color: white;
+	float: right;
+}
+.map {
+	height: 45vw;
+	width: 45vw;
+	background-color: black;
+	margin: auto;
+	color: white;
+	float: left;
 }
 
+.roomTile {
+	height: 9vw;
+	width: 9vw;
+	float: left;
+}
 .tile {
-	height: 6vh;
-	width: 6vh;
+	height: 3vw;
+	width: 3vw;
 	float: left;
 }
 .wall {
@@ -26,5 +48,5 @@
 .play {
 	background-color: gray;
 	background-image: url("chibiSquid.png");
-	background-size: 6vh;
+	background-size: 3vw;
 }

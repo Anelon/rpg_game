@@ -40,6 +40,7 @@ const int MAP_RIGHT = 127;
 int MAP_SIZE_X = 5;
 int ROOM_SIZE_X = 16;
 
+
 bool game_on = true;
 const unsigned int TIMEOUT = 300;
 //conver x and y to a vector index

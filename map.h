@@ -18,7 +18,6 @@ class room {
 		void set_room(string room);
 		vector<char> render_room_map();
 		void render_room();
-		void print_room();
 		string string_room();
 		void print_render_room_map();
 		void see_room();
@@ -35,6 +34,7 @@ class room {
 		int get_size();
 		void move_monster();
 		string move_player(int new_player_x,int new_player_y);
+		bool player_in();
 };
 
 class map {
@@ -44,11 +44,10 @@ class map {
 	public:
 		void render_map();
 		string string_map();
-		void print_map();
 		void generate_map();
 		void addto_map(room add);
 		void shuffle_map();
-		room get_room(int room_number);
+		room& get_room(int room_number);
 		void open_doors();
 		void solvable(int room);
 		void add_mob();
@@ -65,19 +64,6 @@ void room::render_room() {
 		cout << tile.at(i);
 	}
 	cout << endl;
-}
-void room::print_room() {
-	int row = 0;
-	int column = 0;
-	//move 2 columns for every one out (to look nicer)
-	for(unsigned int i = 0; i < tile.size(); i++) {
-		if(i%16 == 0 && i >=1) {
-			row++;
-			column -=16;
-		}
-		//mvaddch(row,(i%16)+column,tile.at(i));
-		column++;
-	}
 }
 string room::string_room() {
 	string stringRoom = "";
@@ -98,7 +84,13 @@ vector<char> room::render_room_map() {
 	//check left side for door
 	if(tile.at(128) == '=') map_tile.push_back('=');
 	else map_tile.push_back('#');
-	map_tile.push_back('.');
+	//replace with P if player?
+	//B if boss mob (when adding mobs)
+	if (is_in_room()) {
+		map_tile.push_back('P');
+	} else {
+		map_tile.push_back('.');
+	}
 	//check right side for door
 	if(tile.at(127) == '=') map_tile.push_back('=');
 	else map_tile.push_back('#');
@@ -198,6 +190,10 @@ string room::move_player(int new_player_x, int new_player_y) {
 	string stringed = string_room();
 	return stringed;
 }
+bool room::player_in() {
+	auto it = find(tile.begin(),tile.end(),PLAYER);
+	return it != tile.end();
+}
 
 
 
@@ -217,50 +213,27 @@ string map::string_map() {
 	render_map();
 	string stringMap = "";
 	for (size_t i = 0 ; i < mini_map.size(); i++) {
-		if (i % 9 == 0 && i != 0) stringMap.push_back(' ');
 		stringMap.push_back(mini_map.at(i));
 	}
 	return stringMap;
 }
-void map::print_map() {
-	render_map();
-	int column = 35;
-	int row = 16;
-	for (unsigned int i = 0; i < mini_map.size(); i++) {
-		//place character on map then incriment column
-		//mvaddch(row,column,mini_map.at(i));
-		column++;
-		//moves the map row down 1 and puts the columns back to the start
-		if(i%45 == 44) {
-			row -= 4;
-			column -=20;
-		}
-		//handles each room's map positioning
-		if(i%9 == 2) {
-			row++;
-			column -=3;
-		}else if(i%9 == 5) {
-			row++;
-			column -=3;
-		} else if(i%9 == 8) {
-			row-=2;
-			column++;
-		}
-	}	
-}
 void map::generate_map() {
+	srand(time(NULL));
 	random_shuffle(game_map.begin()+1, game_map.end()-1);
 	swap(game_map.at(0),game_map.at(2));
-	swap(game_map.at(24),game_map.at(21));
+	swap(game_map.at(24),game_map.at(22));
 }
-
+//add a room to the map (used on startup)
 void map::addto_map(room add) {
 	game_map.push_back(add);
 }
-room map::get_room(int room_number) {
+//give the room number get the room
+//POSSIBLY WHERE NOT GETTING SAVED?
+room& map::get_room(int room_number) {
 	return game_map.at(room_number);
 }
 void map::open_doors() {
+	srand(time(NULL));
 	for(unsigned int i = 0; i < game_map.size(); i+=2) {
 		int roll = 0;
 		if (i !=2) {
@@ -308,17 +281,26 @@ void map::open_doors() {
 	}
 }
 void map::solvable(int room) {
-	game_map.at(room).is_reached();
-	if (game_map.at(room).door_top && !game_map.at(room+5).is_reachable()) {
+	cout << "test\n";
+	bool door_top = (get_room(room).get_tile(8) == '=');
+	bool door_bottom = (get_room(room).get_tile(248) == '=');
+	bool door_left = (get_room(room).get_tile(128) == '=');
+	bool door_right = (get_room(room).get_tile(127) == '=');
+	get_room(room).is_reached();
+	if (door_top && !game_map.at(room+5).is_reachable()) {
+		cout << "down\n";
 		solvable(room+5);
 	} 
-	if (game_map.at(room).door_bottom && !game_map.at(room-5).is_reachable()) {
+	if (door_bottom && !game_map.at(room-5).is_reachable()) {
+		cout << "up\n";
 		solvable(room-5);
 	} 
-	if (game_map.at(room).door_left && !game_map.at(room-1).is_reachable()) {
+	if (door_left && !game_map.at(room-1).is_reachable()) {
+		cout << "right\n";
 		solvable(room-1);
 	} 
-	if (game_map.at(room).door_right && !game_map.at(room+1).is_reachable()) {
+	if (door_right && !game_map.at(room+1).is_reachable()) {
+		cout << "left\n";
 		solvable(room+1);
 	}
 }

@@ -474,7 +474,7 @@ map make_rooms() {
 	row13 = "#.#..........#.#";
 	row14 = "#.##........##.#";
 	row15 = "#..............#";
-	row16 = "#######==#######";
+	row16 = "################";
 	roomtile = row1 + row2 + row3 + row4 + row5 + row6 + row7 + row8 + row9 + row10 + row11 + row12 + row13 + row14 + row15 + row16;
 	room25.set_room(roomtile);
 	//add all of the rooms to the map
@@ -507,7 +507,7 @@ map make_rooms() {
 	//display generating map (maybe)
 	game_map.generate_map();
 	game_map.open_doors();
-	game_map.solvable(22);
+	game_map.solvable(2);
 	if (!game_map.get_room(22).is_reachable()) {
 		game_map.reset();
 		make_rooms();
