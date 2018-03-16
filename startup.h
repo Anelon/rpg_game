@@ -509,8 +509,12 @@ map make_rooms() {
 	game_map.open_doors();
 	game_map.solvable(2);
 	if (!game_map.get_room(22).is_reachable()) {
-		game_map.reset();
-		make_rooms();
+		//game_map.reset();
+		//make_rooms();
+		cout << "not completable: refresh\n";
+
+		EM_ASM("alert('Map Unsolvable Refreshing')");
+		EM_ASM("location.reload()");
 	}
 	game_map.add_mob();
 	return game_map;

@@ -218,6 +218,7 @@ string map::string_map() {
 	return stringMap;
 }
 void map::generate_map() {
+	cout << "shuffle shuffle shuffle\n";
 	srand(time(NULL));
 	random_shuffle(game_map.begin()+1, game_map.end()-1);
 	swap(game_map.at(0),game_map.at(2));
@@ -288,19 +289,15 @@ void map::solvable(int room) {
 	bool door_right = (get_room(room).get_tile(127) == '=');
 	get_room(room).is_reached();
 	if (door_top && !game_map.at(room+5).is_reachable()) {
-		cout << "down\n";
 		solvable(room+5);
 	} 
 	if (door_bottom && !game_map.at(room-5).is_reachable()) {
-		cout << "up\n";
 		solvable(room-5);
 	} 
 	if (door_left && !game_map.at(room-1).is_reachable()) {
-		cout << "right\n";
 		solvable(room-1);
 	} 
 	if (door_right && !game_map.at(room+1).is_reachable()) {
-		cout << "left\n";
 		solvable(room+1);
 	}
 }
