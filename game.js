@@ -29,8 +29,9 @@ var dialogues = [
 ];
 var lyricPuzzle = [
 	"Hello there, you look a little lost</br>Oh, I see your missing your Suica card</br>I can give you mine, but only if you help me first</br>",
-	"You see, I have this song stuck in my head but I am missing one word: </br>'You know how people always say</br><input type='text' name='lyricSolution' id='lyricSloution'></br>I dont know I'm kind of thinking.</br> It's the other way around,</br>Like the moment seizes us",
-	"Thanks so much for all of your help here is my Suica Card,</br> it should have enough to get you where you need to go"
+	"You see, I have this song stuck in my head but I am missing one word: </br>'You know how people always say</br><input type='text' name='lyricSolution' id='lyricSolution'><button onclick='checkAnswer()'>Check</button></br>I dont know I'm kind of thinking.</br> It's the other way around,</br>Like the moment seizes us",
+	"Thanks so much for all of your help here is my Suica Card,</br> it should have enough to get you where you need to go",
+	"Head to the train on the other end of the station from here."
 ];
 var lyricPuzzlePart = 0;
 
@@ -69,19 +70,11 @@ function load () {
 
 	document.addEventListener("keypress", function () {
 		input = event.key.charCodeAt(0);
-		console.log(event.key);
-		if(input === pauseKey || event.key === "Escape") {
+		console.log(input);
+		if(input === pauseKey) {
 			if(pause) lore.innerHTML = "";
 			if(lyricDiv.style.display === "block") {
-				var lyricSolution = document.getElementById("lyricSolution");
-				if(lyricSolution) {
-					if(lyricSolution.value.toUpperCase() === "SEIZE THE MOMENT") {
-					} else {
-						lyricDiv.style.display = "none";
-					}
-				} else {
-					lyricDiv.style.display = "none";
-				}
+				lyricDiv.style.display = "none";
 			}
 			pause = !pause;
 		}
@@ -128,15 +121,22 @@ function runGameLoop() {
 		if(directionFacing === faceLeft) var target = playerLocation - 1;
 		if(directionFacing === faceRight) var target = playerLocation + 1;
 
-		if(gameTiles[target].classList.contains("boss")) {
+		if(gameTiles[target].classList.contains("mobs")) {
+			showDialog();
+			foundMob = true;
+		} else if(gameTiles[target].classList.contains("boss")) {
 			showLyricPuzzle();//open lyricPuzzle
 			foundMob = true;
-		}
-		if(gameTiles[target].classList.contains("mobs")) {
+		} else if(gameTiles[target].classList.contains("goal")) {
+			if(hasSuica) {
+				lore.innerHTML = "<h2>Congrats, you made it to your train</br>Thanks for playing.</br>Now go find your friend and try not to get seperated next time.</h2>";
+			} else {
+				lore.innerHTML = "<h2>You need a Suica Card to get to the train</h2>";
+			}
 			foundMob = true;
 		}
 		if(foundMob) {
-			console.log("interact");//playerLocation check around for mobs
+			//console.log("interact");//playerLocation check around for mobs
 			pause = true;
 			depression--;
 			showBar();
@@ -179,9 +179,9 @@ function chartoClass(char) {
 		className = "locked";
 	} else if (char == "$") { //PLACK
 		className = "plack";
-	} else if (char == "G") { //PLACK
+	} else if (char == "G") { //Goal
 		className = "goal";
-	} else if (char == "B") { //PLACK
+	} else if (char == "B") { //Helpful Squid
 		className = "boss";
 	}
 	return className;
@@ -197,11 +197,24 @@ function showBar() {
 function showLyricPuzzle() {
 	lyricDivText.innerHTML = lyricPuzzle[lyricPuzzlePart];
 	if(lyricPuzzlePart === 0) lyricPuzzlePart++;
-	if(lyricPuzzlePart === 2) hasSuica = true;
 	lyricDiv.style.display = "block";
 }
-function showDialog(dialogNum) {
-	console.log("meh");
-	var helpfulMessages = ["Go " + directionfromRoom(), "Nope"];
-	var notHelpful = [];
+function checkAnswer() {
+	var lyricSolution = document.getElementById("lyricSolution");
+	console.log("checking answer");
+	console.log(lyricSolution.value.toUpperCase());
+	if(lyricSolution) {
+		if(lyricSolution.value.toUpperCase() === "SEIZE THE MOMENT") {
+			console.log("solved");
+			lyricPuzzlePart++;
+			lyricDivText.innerHTML = lyricPuzzle[lyricPuzzlePart];
+			hasSuica = true;
+			lyricPuzzlePart++;
+		}
+	}
+}
+function showDialog() {
+	loreText = document.createElement("h3"); //create element and put text into it
+	loreText.innerHTML = dialogues[Math.floor(Math.random() * dialogues.length)];
+	lore.appendChild(loreText); 
 }
