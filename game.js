@@ -20,6 +20,7 @@ var pauseKey = 69;
 var interact = 32;
 var pause = true;
 var hasSuica = false;
+var gameOver = false;
 
 var dialogues = [
 	"Go to the top",
@@ -73,7 +74,7 @@ function load () {
 	document.addEventListener("keypress", function () {
 		input = event.key.charCodeAt(0);
 		console.log(input);
-		if(input === pauseKey) {
+		if(input === pauseKey && !gameOver) {
 			if(pause) lore.innerHTML = "";
 			if(lyricDiv.style.display === "block") {
 				lyricDiv.style.display = "none";
@@ -132,6 +133,7 @@ function runGameLoop() {
 		} else if(gameTiles[target].classList.contains("goal")) {
 			if(hasSuica) {
 				lore.innerHTML = "<h2>Congrats!</br>You made it to your train</br>Thanks for playing.</br>Now go find your friend and try not to get seperated next time.</h2>";
+				gameOver = true;
 			} else {
 				lore.innerHTML = "<h2>You need a Suica Card to get to the train</h2>";
 			}
@@ -190,10 +192,18 @@ function chartoClass(char) {
 }
 function showBar() {
 	bar.innerHTML = "";
-	for (var i = 0; i < depression; i++) {
-		var barBlock = document.createElement("div");
-		barBlock.setAttribute("class","barBlock");
-		bar.appendChild(barBlock);
+	if(depression === 10) {
+		lore.innerHTML = "<h2>You're starting to loose hope at ever finding your friend</h2>";
+	}
+	if(depression) {
+		for (var i = 0; i < depression; i++) {
+			var barBlock = document.createElement("div");
+			barBlock.setAttribute("class","barBlock");
+			bar.appendChild(barBlock);
+		}
+	} else {
+		gameOver = true;
+		lore.innerHTML = "<h2>You loose hope at ever finding</br>your way back to your friend.</br>Game Over.</h2>";
 	}
 }
 function showLyricPuzzle() {
