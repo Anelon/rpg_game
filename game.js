@@ -7,6 +7,8 @@ var lore = document.getElementById("lore");
 var bar = document.getElementById("bar");
 var lyricDiv = document.getElementById("lyric");
 var lyricDivText = document.getElementById("lyricText");
+var loreSubText = document.createElement("p");
+loreSubText.innerHTML = "Press Enter to Continue";
 const faceUp = "faceUp";
 const faceDown = "faceDown";
 const faceLeft = "faceLeft";
@@ -40,8 +42,6 @@ var lyricPuzzlePart = 0;
 
 var input = 0;
 var depression = 15;
-//var t=setInterval(runGameLoop(input),1000);
-function test() {alert("test")};
 
 start.addEventListener("click", load());
 function load () {
@@ -75,11 +75,12 @@ function load () {
 		input = event.key.charCodeAt(0);
 		console.log(input);
 		if(input === pauseKey && !gameOver) {
-			if(pause) lore.innerHTML = "";
+			pause = !pause;
+			if(!pause) lore.innerHTML = "";
+			else showDialog("Paused");
 			if(lyricDiv.style.display === "block") {
 				lyricDiv.style.display = "none";
 			}
-			pause = !pause;
 		}
 		//runGameLoop(event.key.charCodeAt(0));
 	});
@@ -125,7 +126,7 @@ function runGameLoop() {
 		if(directionFacing === faceRight) var target = playerLocation + 1;
 
 		if(gameTiles[target].classList.contains("mobs")) {
-			showDialog();
+			showDialog(dialogues[Math.floor(Math.random() * dialogues.length)]);
 			foundMob = true;
 		} else if(gameTiles[target].classList.contains("boss")) {
 			showLyricPuzzle();//open lyricPuzzle
@@ -225,8 +226,10 @@ function checkAnswer() {
 		}
 	}
 }
-function showDialog() {
+function showDialog(text) {
 	loreText = document.createElement("h3"); //create element and put text into it
-	loreText.innerHTML = dialogues[Math.floor(Math.random() * dialogues.length)];
+	//loreText.innerHTML = dialogues[Math.floor(Math.random() * dialogues.length)];
+	loreText.innerHTML = text;
 	lore.appendChild(loreText); 
+	lore.appendChild(loreSubText);
 }
