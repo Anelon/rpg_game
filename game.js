@@ -1,6 +1,43 @@
+var playerLocation = 0;
+var directionFacing = "up";
 var game = document.getElementById("game");
 var map = document.getElementById("map");
 var start = document.getElementById("start");
+var lore = document.getElementById("lore");
+var bar = document.getElementById("bar");
+var lyricDiv = document.getElementById("lyric");
+var lyricDivText = document.getElementById("lyricText");
+const faceUp = "faceUp";
+const faceDown = "faceDown";
+const faceLeft = "faceLeft";
+const faceRight = "faceRight";
+//charCodes
+var up = 119;
+var down = 115;
+var left = 97;
+var right = 100;
+var pauseKey = 69;
+var interact = 32;
+var pause = true;
+var hasSuica = false;
+
+var dialogues = [
+	"Go to the top",
+	"Gl HF",
+	"I have this song stuck in my head, it goes like:</br>'You know how people always say</br>Seize the moment</br>I dont know im kindof thinking its the other way around,</br>Like the moment seizes us",
+	"42"
+];
+var lyricPuzzle = [
+	"Hello there, you look a little lost</br>Oh, I see your missing your Suica card</br>I can give you mine, but only if you help me first</br>",
+	"You see, I have this song stuck in my head but I am missing one word: </br>'You know how people always say</br><input type='text' name='lyricSolution' id='lyricSloution'></br>I dont know I'm kind of thinking.</br> It's the other way around,</br>Like the moment seizes us",
+	"Thanks so much for all of your help here is my Suica Card,</br> it should have enough to get you where you need to go"
+];
+var lyricPuzzlePart = 0;
+
+var input = 0;
+var depression = 15;
+//var t=setInterval(runGameLoop(input),1000);
+function test() {alert("test")};
 
 start.addEventListener("click", load());
 function load () {
@@ -28,29 +65,85 @@ function load () {
 			roomTile.appendChild(tile);
 		}
 	}
+	showBar();
 
 	document.addEventListener("keypress", function () {
-		runGameLoop(event.key.charCodeAt(0));
+		input = event.key.charCodeAt(0);
+		console.log(event.key);
+		if(input === pauseKey || event.key === "Escape") {
+			if(pause) lore.innerHTML = "";
+			if(lyricDiv.style.display === "block") {
+				var lyricSolution = document.getElementById("lyricSolution");
+				if(lyricSolution) {
+					if(lyricSolution.value.toUpperCase() === "SEIZE THE MOMENT") {
+					} else {
+						lyricDiv.style.display = "none";
+					}
+				} else {
+					lyricDiv.style.display = "none";
+				}
+			}
+			pause = !pause;
+		}
+		//runGameLoop(event.key.charCodeAt(0));
 	});
-	//console.log("loadrun");
-	//runGameLoop(" ");
 };
 
-function runGameLoop(ch) {
-	var gameTiles = game.children;
-	//calls gameLoop and converts Cstring to a Javascrpt String
-	var getGame = UTF8ToString(__Z8gameLoopi(ch));
-	//Splits string baised on Spaces put in when rendering
-	var split = getGame.split(" ");
-	var size = parseInt(split.length);
-	for (var line in split) {
-		for (var row in split[line]) {
-			//setup parsing string to tiles	
-			var tileid = ((line)*(size))+parseInt(row);
-			gameTiles[tileid].setAttribute("class", "tile "+ chartoClass(split[line].charAt(row)));
+function runGameLoop() {
+	//console.log(input);
+	if(pause) {
+		setTimeout(runGameLoop, 1000);
+		return;
+	}
+	if(input != interact) {
+		//change the directionFacing of the player
+		if(input === up) directionFacing = faceUp;
+		else if (input === down) directionFacing = faceDown;
+		else if (input === left) directionFacing = faceLeft;
+		else if (input === right) directionFacing = faceRight;
+		var gameTiles = game.children;
+		//calls gameLoop and converts Cstring to a Javascrpt String
+		var getGame = UTF8ToString(__Z8gameLoopi(input));
+		console.log(getGame);
+		//Splits string baised on Spaces put in when rendering
+		var split = getGame.split(" ");
+		var size = parseInt(split.length);
+		for (var line in split) {
+			for (var row in split[line]) {
+				//setup parsing string to tiles	
+				var tileid = ((line)*(size))+parseInt(row);
+				if(split[line].charAt(row) === "P") {
+					playerLocation = tileid;
+				}
+				gameTiles[tileid].setAttribute("class", "tile "+ chartoClass(split[line].charAt(row)));
+			}
+		}
+		showMap();
+	} else if(input === interact) {
+		var foundMob = false;
+		var gameTiles = game.children;
+		//calculate target baised on looking
+		if(directionFacing === faceUp) var target = playerLocation - 16;
+		if(directionFacing === faceDown) var target = playerLocation + 16;
+		if(directionFacing === faceLeft) var target = playerLocation - 1;
+		if(directionFacing === faceRight) var target = playerLocation + 1;
+
+		if(gameTiles[target].classList.contains("boss")) {
+			showLyricPuzzle();//open lyricPuzzle
+			foundMob = true;
+		}
+		if(gameTiles[target].classList.contains("mobs")) {
+			foundMob = true;
+		}
+		if(foundMob) {
+			console.log("interact");//playerLocation check around for mobs
+			pause = true;
+			depression--;
+			showBar();
 		}
 	}
-	showMap();
+	input = 0;//reset input to stop from walking
+	setTimeout(runGameLoop, 100);
 }
 function showMap() {
 	var map = document.getElementById("map");
@@ -78,10 +171,37 @@ function chartoClass(char) {
 		className = "wall";
 	} else if (char == "=") { //DOOR
 		className = "door";
-	} else if (char == "M") { //MONSTER
+	} else if (char >= "0" && char <= "9") { //MONSTER
 		className = "mobs";
 	} else if (char == "P") { //PLAYER
-		className = "play";
+		className = "play " + directionFacing;
+	} else if (char == "~") { //LOCKED DOOR
+		className = "locked";
+	} else if (char == "$") { //PLACK
+		className = "plack";
+	} else if (char == "G") { //PLACK
+		className = "goal";
+	} else if (char == "B") { //PLACK
+		className = "boss";
 	}
 	return className;
+}
+function showBar() {
+	bar.innerHTML = "";
+	for (var i = 0; i < depression; i++) {
+		var barBlock = document.createElement("div");
+		barBlock.setAttribute("class","barBlock");
+		bar.appendChild(barBlock);
+	}
+}
+function showLyricPuzzle() {
+	lyricDivText.innerHTML = lyricPuzzle[lyricPuzzlePart];
+	if(lyricPuzzlePart === 0) lyricPuzzlePart++;
+	if(lyricPuzzlePart === 2) hasSuica = true;
+	lyricDiv.style.display = "block";
+}
+function showDialog(dialogNum) {
+	console.log("meh");
+	var helpfulMessages = ["Go " + directionfromRoom(), "Nope"];
+	var notHelpful = [];
 }

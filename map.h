@@ -4,7 +4,7 @@
 class room {
 	private:
 		vector<char> tile;
-		vector<Mob> monsters;
+		vector<Mob> mobs;
 		bool seen = false;
 		bool in_room = false;
 		bool reachable = false;
@@ -27,12 +27,13 @@ class room {
 		bool is_in_room();
 		char get_tile(int space);
 		void add_door(int place);
-		void set_mob(int place);
+		void set_mob(int place); //mobs break something
+		void get_monster_dialogue(int);
+		void place_mob(Mob);
 		bool is_reachable();
 		void is_reached();
 		void not_reachable();
 		int get_size();
-		void move_monster();
 		string move_player(int new_player_x,int new_player_y);
 		bool player_in();
 };
@@ -155,11 +156,26 @@ void room::add_door(int place) {
 	}
 }
 void room::set_mob(int place) {
-	tile.at(place) = 'm';
-	Mob temp_mob;
+	tile.at(place) = '0' + rand()%10;
+//	Mob temp_mob(place, getName(), getDialogue());
+	/*
 	temp_mob.setlife(100);
 	temp_mob.set_location(place);
-	monsters.push_back(temp_mob);
+	*/
+//	cout << temp_mob.get_dialogue() << endl;
+	//mobs.push_back(temp_mob);
+}
+void room::place_mob(Mob newMob) {
+	//mobs.push_back(newMob);
+}
+void room::get_monster_dialogue(int position) {
+	//search for monster at position
+	for(Mob temp: mobs) {
+		cout << "hit" << endl;
+		if(temp.get_location() == position) {
+			cout << temp.get_dialogue() << endl;
+		}
+	}
 }
 bool room::is_reachable() {
 	return reachable;
@@ -173,14 +189,6 @@ void room::not_reachable() {
 int room::get_size() {
 	return tile.size();
 }
-/*void room::move_monster() {
-	for (unsigned int i = 0; i < monsters.size(); i++) {
-		vector<int> coord = get_coordinate(monsters.at(i));
-		int new_x = coord[0] + rand()%3 -1;
-		int new_y = coord[1] + rand()%3 -1;
-		index(new_x, new_y);
-	}
-}*/
 string room::move_player(int new_player_x, int new_player_y) {
 	tile.at(index(player_x,player_y)) = OPEN;
 	tile.at(index(new_player_x,new_player_y)) = PLAYER;
@@ -204,9 +212,10 @@ void map::render_map() {
 	//takes the rending of the rooms vector and puts them in mini map vector if seen
 	for (unsigned int i = 0; i < game_map.size(); i++) {
 		vector<char>basic_room = game_map.at(i).render_room_map();
-		//if(game_map.at(i).is_seen())
-		mini_map.insert(mini_map.end(), basic_room.begin(), basic_room.end());
-		//else mimi_map.insert(mini_map.end(), blank_room.begin(), blank_room.end());
+		//if(game_map.at(i).is_reachable())
+		if(game_map.at(i).is_seen())
+			mini_map.insert(mini_map.end(), basic_room.begin(), basic_room.end());
+		else mini_map.insert(mini_map.end(), blank_room.begin(), blank_room.end());
 	}
 }
 string map::string_map() {
@@ -282,7 +291,6 @@ void map::open_doors() {
 	}
 }
 void map::solvable(int room) {
-	cout << "test\n";
 	bool door_top = (get_room(room).get_tile(8) == '=');
 	bool door_bottom = (get_room(room).get_tile(248) == '=');
 	bool door_left = (get_room(room).get_tile(128) == '=');
@@ -302,17 +310,20 @@ void map::solvable(int room) {
 	}
 }
 void map::add_mob() {
+	cout << "adding mobs\n";
+	srand(time(NULL));
 	for(unsigned int i = 0; i < game_map.size(); i++) {
 		int roll = 0;
-		if (i !=2) {
+		if (i !=2 && game_map.at(i).is_reachable()) {
 			for(int j = 0; j < game_map.at(i).get_size(); j++) {
 				//set monsters to not spawn on edges of maps
-				if(i > 32 || i < 224 || (i%16) == 1 || (i%16) == 15) continue;
+				if(j < 32 || j > 224 || (j%16) == 0 || (j%16) == 15) continue;
 				//place monsters
-				if(game_map.at(i).get_tile(j) == '.') {
+				if(get_room(i).get_tile(j) == '.') {
 					roll = (rand()%100);
 					if (roll < MOB_CHANCE) { //add monster to room
 						game_map.at(i).set_mob(j);
+						cout << "mob\n";
 					}
 				}
 			}

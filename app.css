@@ -14,13 +14,29 @@
 	color: white;
 	float: right;
 }
+.bar {
+	width: 45vw;
+	margin: auto;
+	height: 3vw;
+	background-color: black;
+	margin-bottom: 1rem;
+	border-color: gray;
+	border-width: 5px;
+	border-style: solid;
+}
+.barBlock {
+	float: left;
+	width: 3vw;
+	height: 3vw;
+	background-color: red;
+}
 .map {
 	height: 45vw;
 	width: 45vw;
 	background-color: black;
 	margin: auto;
 	color: white;
-	float: left;
+	/*float: left;*/
 }
 
 .roomTile {
@@ -33,20 +49,67 @@
 	width: 3vw;
 	float: left;
 }
+/*tile classes*/
 .wall {
 	background-color: #4d2600;
 }
 .open {
-	background-color: gray;
+	background-color: darkgray;
 }
 .door {
 	background-color: black;
 }
+.locked {
+	background-color: gray;
+}
+.plack {
+	background-color: darkgray;
+	background-image: url("stone.png");
+	background-size: 3vw;
+}
+.goal {
+	background-color: green;
+}
 .mobs{
-	background-color: blue;
+	background-color: darkgray;
+	background-image: url("pinkSquid.png");
+	background-size: 3vw;
+}
+.boss{
+	background-color: darkgray;
+	background-image: url("pinkSquid.png");
+	background-size: 3vw;
 }
 .play {
-	background-color: gray;
+	background-color: darkgray;
 	background-image: url("chibiSquid.png");
 	background-size: 3vw;
+}
+.faceUp {
+	-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+.faceDown {
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+.faceRight {
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.faceLeft {
+	-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
+.lore {
+	color: white;
+	text-align: center;
+	padding-left:20px;
+	padding-right:20px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	background-color: gray;
 }

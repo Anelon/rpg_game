@@ -7,7 +7,7 @@ map make_rooms() {
 	string row2  = "#..............#";
 	string row3  = "#.##........##.#";
 	string row4  = "#.##........##.#";
-	string row5  = "#..............#";
+	string row5  = "#..$........$..#";
 	string row6  = "#..............#";
 	string row7  = "#..............#";
 	string row8  = "=..............=";
@@ -17,7 +17,7 @@ map make_rooms() {
 	string row12 = "#..............#";
 	string row13 = "#.##........##.#";
 	string row14 = "#.##........##.#";
-	string row15 = "#..............#";
+	string row15 = "#......B.......#";
 	string row16 = "################";
 	string roomtile = row1 + row2 + row3 + row4 + row5 + row6 + row7 + row8 + row9 + row10 + row11 + row12 + row13 + row14 + row15 + row16;
 	room1.set_room(roomtile);
@@ -459,13 +459,13 @@ map make_rooms() {
 	roomtile = row1 + row2 + row3 + row4 + row5 + row6 + row7 + row8 + row9 + row10 + row11 + row12 + row13 + row14 + row15 + row16;
 	room24.set_room(roomtile);
 	room room25;
-	row1  = "################";
+	row1  = "#######GG#######";
 	row2  = "#..............#";
 	row3  = "#.##...##...##.#";
 	row4  = "#.#..........#.#";
 	row5  = "#..............#";
 	row6  = "#..............#";
-	row7  = "#.......B......#";
+	row7  = "#..............#";
 	row8  = "#.#..........#.#";
 	row9  = "#.#..........#.#";
 	row10 = "#..............#";
@@ -511,8 +511,6 @@ map make_rooms() {
 	if (!game_map.get_room(22).is_reachable()) {
 		//game_map.reset();
 		//make_rooms();
-		cout << "not completable: refresh\n";
-
 		EM_ASM("alert('Map Unsolvable Refreshing')");
 		EM_ASM("location.reload()");
 	}
