@@ -24,12 +24,14 @@ var hasSuica = false;
 var dialogues = [
 	"Go to the top",
 	"Gl HF",
-	"I have this song stuck in my head, it goes like:</br>'You know how people always say</br>Seize the moment</br>I dont know im kindof thinking its the other way around,</br>Like the moment seizes us",
+	"Sorry, No speak English",
+	"What is your favorite color?",
+	"I have this song stuck in my head, it goes like:</br>'You know how people always say</br>Seize the moment</br>I dont know im kindof thinking its the other way around,</br>Like the moment seizes us'",
 	"42"
 ];
 var lyricPuzzle = [
 	"Hello there, you look a little lost</br>Oh, I see your missing your Suica card</br>I can give you mine, but only if you help me first</br>",
-	"You see, I have this song stuck in my head but I am missing one word: </br>'You know how people always say</br><input type='text' name='lyricSolution' id='lyricSolution'><button onclick='checkAnswer()'>Check</button></br>I dont know I'm kind of thinking.</br> It's the other way around,</br>Like the moment seizes us",
+	"You see, I have this song stuck in my head but I am missing one word: </br>'You know how people always say</br><input type='text' name='lyricSolution' id='lyricSolution'><button onclick='checkAnswer()'>Check</button></br>I dont know I'm kind of thinking.</br> It's the other way around,</br>Like the moment seizes us'",
 	"Thanks so much for all of your help here is my Suica Card,</br> it should have enough to get you where you need to go",
 	"Head to the train on the other end of the station from here."
 ];
@@ -129,7 +131,7 @@ function runGameLoop() {
 			foundMob = true;
 		} else if(gameTiles[target].classList.contains("goal")) {
 			if(hasSuica) {
-				lore.innerHTML = "<h2>Congrats, you made it to your train</br>Thanks for playing.</br>Now go find your friend and try not to get seperated next time.</h2>";
+				lore.innerHTML = "<h2>Congrats!</br>You made it to your train</br>Thanks for playing.</br>Now go find your friend and try not to get seperated next time.</h2>";
 			} else {
 				lore.innerHTML = "<h2>You need a Suica Card to get to the train</h2>";
 			}
@@ -201,11 +203,11 @@ function showLyricPuzzle() {
 }
 function checkAnswer() {
 	var lyricSolution = document.getElementById("lyricSolution");
-	console.log("checking answer");
-	console.log(lyricSolution.value.toUpperCase());
+	//console.log("checking answer");
+	//console.log(lyricSolution.value.toUpperCase());
 	if(lyricSolution) {
 		if(lyricSolution.value.toUpperCase() === "SEIZE THE MOMENT") {
-			console.log("solved");
+			//console.log("solved");
 			lyricPuzzlePart++;
 			lyricDivText.innerHTML = lyricPuzzle[lyricPuzzlePart];
 			hasSuica = true;
